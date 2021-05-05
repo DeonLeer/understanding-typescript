@@ -55,12 +55,15 @@ function extractAndConvert<T extends object, U extends keyof T>(
 
 // Generic Classes
 
-class DataStorage<T> {
+class DataStorage<T extends string | number | boolean> {
   private data: T[] = [];
   addItem(item: T) {
     this.data.push(item);
   }
   removeItem(item: T) {
+    if (this.data.indexOf(item) === -1) {
+      return;
+    }
     this.data.splice(this.data.indexOf(item), 1);
   }
   getItems() {
@@ -75,10 +78,26 @@ textStorage.removeItem("Tim");
 
 const numberStorage = new DataStorage<number>();
 
-const objStorage = new DataStorage<object>();
+// Generic utility types
 
-objStorage.addItem({name: 'manu'})
-objStorage.addItem({name: 'max'})
-console.log(objStorage.getItems())
-objStorage.removeItem({name: 'manu'})
-console.log(objStorage.getItems())
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(
+  title: string,
+  description: string,
+  date: Date
+): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+  return courseGoal as CourseGoal;
+}
+
+const names1: Readonly<string[]> = ['max', 'sports']
+// names1.push('manu') cant push, pop or anything
+
